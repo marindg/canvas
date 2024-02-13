@@ -11,10 +11,6 @@ export const Navbar = () => {
   const { organization } =
     useOrganization();
 
-  console.log(
-    "organization :",
-    organization
-  );
   return (
     <div className="flex items-center gap-x-4 p-5">
       <div className="hidden lg:flex lg:flex-1">
