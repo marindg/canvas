@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { OrganizationSwitcher } from "@clerk/nextjs";
+
 import {
   LayoutDashboard,
   Star,
@@ -43,31 +43,7 @@ export const OrgSidebar = () => {
           </span>
         </div>
       </Link>
-      <OrganizationSwitcher
-        hidePersonal
-        appearance={{
-          elements: {
-            rootBox: {
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-            },
-            organizationSwitcherTrigger:
-              {
-                padding: "6px",
-                width: "100%",
-                borderRadius: "8px",
-                border:
-                  "1px solid #E5E7EB",
-                justifyContent:
-                  "space-between",
-                backgroundColor:
-                  "white  ",
-              },
-          },
-        }}
-      />
+
       <div className="space-y-1 w-full">
         <Button
           asChild
