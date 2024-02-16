@@ -22,7 +22,7 @@ export const BoardList = ({
 }: BoardListProps) => {
   const data = useQuery(
     api.boards.get,
-    { orgId }
+    { orgId, ...query }
   );
 
   if (data === undefined) {
@@ -38,6 +38,7 @@ export const BoardList = ({
             orgId={orgId}
             disabled
           />
+          <BoardCard.Skeleton />
           <BoardCard.Skeleton />
           <BoardCard.Skeleton />
           <BoardCard.Skeleton />
