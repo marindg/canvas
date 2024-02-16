@@ -78,7 +78,7 @@ export const RenameModal = () => {
           className="space-y-4"
         >
           <Input
-            disabled={false}
+            disabled={pending}
             required
             maxLength={60}
             value={title}
@@ -97,7 +97,7 @@ export const RenameModal = () => {
               </Button>
             </DialogClose>
             <Button
-              disabled={false}
+              disabled={pending}
               type="submit"
             >
               Save

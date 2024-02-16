@@ -7,8 +7,13 @@ import { Overlay } from "./overlay";
 
 import { Actions } from "@/components/actions";
 import { Skeleton } from "@/components/ui/skeleton";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+import { useApiMutation } from "@/hooks/use-api-mutation";
+import { useMutation } from "convex/react";
 import { formatDistanceToNow } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
+import { toast } from "sonner";
 import { Footer } from "./footer";
 
 interface BoardCardProps {
@@ -44,6 +49,48 @@ export const BoardCard = ({
       addSuffix: true,
     });
 
+  const handleFavorite = useMutation(
+    api.board.favorite
+  );
+  const handleUnfavorite = useMutation(
+    api.board.unfavorite
+  );
+
+  const {
+    mutate: onFavorite,
+    pending: pendingFavorite,
+  } = useApiMutation(
+    api.board.favorite
+  );
+
+  const {
+    mutate: onUnfavorite,
+    pending: pendingUnfavorite,
+  } = useApiMutation(
+    api.board.unfavorite
+  );
+
+  const toggleFavorite = () => {
+    if (isFavorite) {
+      handleUnfavorite({
+        id: id as Id<"boards">,
+      }).catch(() => {
+        toast.error(
+          "Failed to unfavorite board"
+        );
+      });
+    } else {
+      handleFavorite({
+        id: id as Id<"boards">,
+        orgId,
+      }).catch(() => {
+        toast.error(
+          "Failed to favorite board"
+        );
+      });
+    }
+  };
+
   return (
     <Link href={`/board/${id}`}>
       <div className="group aspect-[100/127] border rounded-lg flex flex-col justify-between overflow-hidden">
@@ -72,8 +119,11 @@ export const BoardCard = ({
           createdAtLabel={
             createdAtLabel
           }
-          onClick={() => {}}
-          disabled={false}
+          onClick={toggleFavorite}
+          disabled={
+            pendingFavorite ||
+            pendingUnfavorite
+          }
         />
       </div>
     </Link>
