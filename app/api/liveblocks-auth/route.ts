@@ -44,8 +44,7 @@ export async function POST(
   }
 
   const userInfo = {
-    name:
-      user.firstName! || "Anonymous",
+    name: user.firstName! || "Teammate",
     picture: user.imageUrl!,
   };
 
