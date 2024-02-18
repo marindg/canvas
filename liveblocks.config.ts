@@ -1,5 +1,12 @@
-import { createClient } from "@liveblocks/client";
+import {
+  LiveList,
+  LiveMap,
+  LiveObject,
+  createClient,
+} from "@liveblocks/client";
 import { createRoomContext } from "@liveblocks/react";
+
+import { Layer } from "@/types/canvas";
 
 const client = createClient({
   throttle: 16,
@@ -14,7 +21,7 @@ type Presence = {
     x: number;
     y: number;
   } | null;
-  // ...
+  selection: string[];
 };
 
 // Optionally, Storage represents the shared document that persists in the
@@ -22,8 +29,8 @@ type Presence = {
 // LiveList, LiveMap, LiveObject instances, for which updates are
 // automatically persisted and synced to all connected clients.
 type Storage = {
-  // author: LiveObject<{ firstName: string, lastName: string }>,
-  // ...
+  layers: LiveMap<string, LiveObject<Layer>>;
+  layerIds: LiveList<string>;
 };
 
 // Optionally, UserMeta represents static/readonly metadata on each user, as
@@ -109,10 +116,7 @@ export const {
 
     return [];
   },
-  async resolveMentionSuggestions({
-    text,
-    roomId,
-  }) {
+  async resolveMentionSuggestions({ text, roomId }) {
     // Used only for Comments. Return a list of userIds that match `text`.
     // These userIds are used to create a mention list when typing in the
     // composer.
