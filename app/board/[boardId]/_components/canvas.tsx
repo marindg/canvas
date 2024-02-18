@@ -94,11 +94,8 @@ export const Canvas = ({ boardId }: CanvasProps) => {
   );
 
   // If pb whith infinite go Cursors Presence 6:39:00
+  // console.log({ camera });
   const onWheel = useCallback((e: React.WheelEvent) => {
-    console.log({
-      x: e.deltaX,
-      y: e.deltaY,
-    });
     setCamera((camera) => ({
       x: camera.x - e.deltaX,
       y: camera.y - e.deltaY,

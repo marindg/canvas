@@ -21,17 +21,20 @@ export const Rectangle = ({
     layer,
   });
   const { x, y, width, height, fill } = layer;
+
+  console.log("rectangle :", { x, y, width, height, fill });
+
   return (
     <rect
       className="drop-shadow-md"
       onPointerDown={(e) => onPointerDown(e, id)}
       style={{ transform: `translate(${x}px, ${y}px)` }}
       x={0}
-      y={y}
+      y={0}
       width={width}
       height={height}
       strokeWidth={1}
-      fill="#000"
+      fill="blue"
       stroke="transparent"
     />
   );
