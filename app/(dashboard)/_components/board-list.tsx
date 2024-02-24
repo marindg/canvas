@@ -20,10 +20,10 @@ export const BoardList = ({
   orgId,
   query,
 }: BoardListProps) => {
-  const data = useQuery(
-    api.boards.get,
-    { orgId, ...query }
-  );
+  const data = useQuery(api.boards.get, {
+    orgId,
+    ...query,
+  });
 
   if (data === undefined) {
     return (
@@ -34,10 +34,7 @@ export const BoardList = ({
             : "Team boards"}
         </h2>
         <div className="grid grid-cols-1 sm-grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-colds-6 gap-5 mt-8 pb-10">
-          <NewBoardButton
-            orgId={orgId}
-            disabled
-          />
+          <NewBoardButton orgId={orgId} disabled />
           <BoardCard.Skeleton />
           <BoardCard.Skeleton />
           <BoardCard.Skeleton />
@@ -51,10 +48,7 @@ export const BoardList = ({
     return <EmptySearch />;
   }
 
-  if (
-    !data?.length &&
-    query.favorites
-  ) {
+  if (!data?.length && query.favorites) {
     return <EmptyFavorites />;
   }
 
@@ -69,7 +63,7 @@ export const BoardList = ({
           ? "Favorite boards"
           : "Team boards"}
       </h2>
-      <div className="grid grid-cols-1 sm-grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-colds-6 gap-5 mt-8 pb-10">
+      <div className="grid grid-cols-1 sm-grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-colds-12 gap-5 mt-8 pb-10">
         <NewBoardButton orgId={orgId} />
 
         {data?.map((board) => (
@@ -79,16 +73,10 @@ export const BoardList = ({
             title={board.title}
             imageUrl={board.imageUrl}
             authorId={board.authorId}
-            authorName={
-              board.authorName
-            }
-            createdAt={
-              board._creationTime
-            }
+            authorName={board.authorName}
+            createdAt={board._creationTime}
             orgId={board.orgId}
-            isFavorite={
-              board.isFavorite
-            }
+            isFavorite={board.isFavorite}
           />
         ))}
       </div>

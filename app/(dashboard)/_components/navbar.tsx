@@ -8,8 +8,7 @@ import {
 import { InviteButton } from "./invite-button";
 import { SearchInput } from "./search-input";
 export const Navbar = () => {
-  const { organization } =
-    useOrganization();
+  const { organization } = useOrganization();
 
   return (
     <div className="flex items-center gap-x-4 p-5">
@@ -23,24 +22,19 @@ export const Navbar = () => {
             elements: {
               rootBox: {
                 display: "flex",
-                justifyContent:
-                  "center",
+                justifyContent: "center",
                 alignItems: "center",
                 width: "100%",
                 maxWidth: "376px",
               },
-              organizationSwitcherTrigger:
-                {
-                  padding: "6px",
-                  width: "100%",
-                  borderRadius: "8px",
-                  border:
-                    "1px solid #E5E7EB",
-                  justifyContent:
-                    "space-between",
-                  backgroundColor:
-                    "white  ",
-                },
+              organizationSwitcherTrigger: {
+                padding: "6px",
+                width: "100%",
+                borderRadius: "8px",
+                border: "1px solid #E5E7EB",
+                justifyContent: "space-between",
+                backgroundColor: "white  ",
+              },
             },
           }}
         />
