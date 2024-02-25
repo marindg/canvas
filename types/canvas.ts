@@ -1,3 +1,8 @@
+export enum boardType {
+  board = "board",
+  taskBoard = "taskBoard",
+}
+
 export type Color = {
   r: number;
   g: number;

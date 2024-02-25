@@ -2,21 +2,14 @@
 
 import {
   Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { api } from "@/convex/_generated/api";
 import { useApiMutation } from "@/hooks/use-api-mutation";
-import {
-  LayoutList,
-  Plus,
-  Presentation,
-} from "lucide-react";
+import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ButtonSelectCanva } from "./button-select-canva";
+import { SelectCanvaDialog } from "./select-type-new-canvas";
 
 interface NewBoardButtonProps {
   orgId: string;
@@ -37,6 +30,7 @@ export const NewBoardButton = ({
     mutate({
       orgId,
       title: "Untitle",
+      type: "board",
     })
       .then((id) => {
         toast.success("Board created");
@@ -47,7 +41,20 @@ export const NewBoardButton = ({
       });
   };
 
-  const handleTask = () => {};
+  const handleTask = () => {
+    mutate({
+      orgId,
+      title: "Untitle",
+      type: "task",
+    })
+      .then((id) => {
+        toast.success("Task board created");
+        router.push(`/task/${id}`);
+      })
+      .catch(() => {
+        toast.error("Failed to create task board");
+      });
+  };
 
   return (
     <Dialog>
@@ -60,30 +67,11 @@ export const NewBoardButton = ({
           </p>
         </button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Which type of canva ?</DialogTitle>
-        </DialogHeader>
-
-        <div className="grid grid-cols-2 gap-6 py-6">
-          <ButtonSelectCanva
-            name="Board"
-            icon={
-              <Presentation className="h-12 w-12 text-white" />
-            }
-            onClick={handleBoard}
-            disabled={disabled}
-          />
-          <ButtonSelectCanva
-            name="Task"
-            icon={
-              <LayoutList className="h-12 w-12 text-white stroke" />
-            }
-            onClick={handleTask}
-            disabled={disabled}
-          />
-        </div>
-      </DialogContent>
+      <SelectCanvaDialog
+        handleBoard={handleBoard}
+        handleTask={handleTask}
+        disabled={disabled}
+      />
     </Dialog>
   );
 };

@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 
 import {
   LayoutDashboard,
+  LayoutList,
+  Presentation,
   Star,
 } from "lucide-react";
 import { Poppins } from "next/font/google";
@@ -18,13 +20,14 @@ const font = Poppins({
 });
 
 export const OrgSidebar = () => {
-  const searchParams =
-    useSearchParams();
-  const favorites = searchParams.get(
-    "favorites"
-  );
+  const searchParams = useSearchParams();
+  const favorites =
+    searchParams.get("favorites") === "true";
+  const taskBoards = searchParams.get("type") === "task";
+  const canvaBoards = searchParams.get("type") === "board";
+
   return (
-    <div className="hidden lg:flex flex-col space-y-6 w-[206px] pl-5 pt-5 ">
+    <div className="hidden lg:flex flex-col space-y-6 w-[206px] pl-5 pt-5">
       <Link href="/">
         <div className="flex items-center gap-x-2">
           <Image
@@ -50,9 +53,9 @@ export const OrgSidebar = () => {
           size="lg"
           className="font-normal justify-start px-2 w-full"
           variant={
-            favorites
-              ? "ghost"
-              : "secondary"
+            !favorites && !taskBoards && !canvaBoards
+              ? "secondary"
+              : "ghost"
           }
         >
           <Link href="/">
@@ -64,22 +67,50 @@ export const OrgSidebar = () => {
           asChild
           size="lg"
           className="font-normal justify-start px-2 w-full"
-          variant={
-            favorites
-              ? "secondary"
-              : "ghost"
-          }
+          variant={favorites ? "secondary" : "ghost"}
         >
           <Link
             href={{
               pathname: "/",
-              query: {
-                favorites: true,
-              },
+              query: { favorites: true },
             }}
           >
             <Star className="h-4 w-4 mr-2" />
             Favorite boards
+          </Link>
+        </Button>
+
+        <Button
+          asChild
+          size="lg"
+          className="font-normal justify-start px-2 w-full"
+          variant={canvaBoards ? "secondary" : "ghost"}
+        >
+          <Link
+            href={{
+              pathname: "/",
+              query: { type: "board" },
+            }}
+          >
+            <Presentation className="h-4 w-4 mr-2" />
+            Canva boards
+          </Link>
+        </Button>
+
+        <Button
+          asChild
+          size="lg"
+          className="font-normal justify-start px-2 w-full"
+          variant={taskBoards ? "secondary" : "ghost"}
+        >
+          <Link
+            href={{
+              pathname: "/",
+              query: { type: "task" },
+            }}
+          >
+            <LayoutList className="h-4 w-4 mr-2" />
+            Task boards
           </Link>
         </Button>
       </div>

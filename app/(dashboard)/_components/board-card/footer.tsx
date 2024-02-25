@@ -8,6 +8,7 @@ interface FooterProps {
   isFavorite: boolean;
   onClick: () => void;
   disabled: boolean;
+  boardType: string;
 }
 
 export const Footer = ({
@@ -17,12 +18,10 @@ export const Footer = ({
   isFavorite,
   onClick,
   disabled,
+  boardType,
 }: FooterProps) => {
   const hanbdleClick = (
-    event: React.MouseEvent<
-      HTMLButtonElement,
-      MouseEvent
-    >
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     event.stopPropagation();
     event.preventDefault();
@@ -31,6 +30,9 @@ export const Footer = ({
 
   return (
     <div className="relative bg-white p-3">
+      <p className="text-[13px] truncate max-w-[calc(100%-20px)] flex items-center justify-center italic">
+        {boardType}
+      </p>
       <p className="text-[13px] truncate max-w-[calc(100%-20px)]">
         {title}
       </p>
@@ -42,15 +44,13 @@ export const Footer = ({
         onClick={hanbdleClick}
         className={cn(
           "opacity-0 group-hover:opacity-100 transition absolute top-3 right-3 text-muted-foreground hover:text-blue-600",
-          disabled &&
-            "cursor-not-allowed opacity-75"
+          disabled && "cursor-not-allowed opacity-75"
         )}
       >
         <Star
           className={cn(
             "h-4 w-4",
-            isFavorite &&
-              "fill-blue-600 text-blue-600"
+            isFavorite && "fill-blue-600 text-blue-600"
           )}
         />
       </button>

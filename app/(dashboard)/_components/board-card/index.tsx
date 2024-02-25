@@ -25,6 +25,7 @@ interface BoardCardProps {
   createdAt: number;
   orgId: string;
   isFavorite: boolean;
+  boardType: string;
 }
 
 export const BoardCard = ({
@@ -36,6 +37,7 @@ export const BoardCard = ({
   createdAt,
   orgId,
   isFavorite,
+  boardType,
 }: BoardCardProps) => {
   const { userId } = useAuth();
 
@@ -77,7 +79,7 @@ export const BoardCard = ({
   };
 
   return (
-    <Link href={`/board/${id}`}>
+    <Link href={`/${boardType}/${id}`}>
       <div className="group aspect-[100/127] border rounded-lg flex flex-col justify-between overflow-hidden">
         <div className="relative flex-1 bg-amber-50">
           <Image
@@ -100,6 +102,7 @@ export const BoardCard = ({
           createdAtLabel={createdAtLabel}
           onClick={toggleFavorite}
           disabled={pendingFavorite || pendingUnfavorite}
+          boardType={boardType}
         />
       </div>
     </Link>

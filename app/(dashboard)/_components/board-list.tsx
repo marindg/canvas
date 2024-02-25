@@ -13,6 +13,7 @@ interface BoardListProps {
   query: {
     search?: string;
     favorites?: string;
+    type?: "board" | "task";
   };
 }
 
@@ -20,6 +21,8 @@ export const BoardList = ({
   orgId,
   query,
 }: BoardListProps) => {
+  console.log("query :", query);
+
   const data = useQuery(api.boards.get, {
     orgId,
     ...query,
@@ -53,7 +56,7 @@ export const BoardList = ({
   }
 
   if (!data?.length) {
-    return <EmptyBoards />;
+    return <EmptyBoards orgId={orgId} />;
   }
 
   return (
@@ -77,6 +80,7 @@ export const BoardList = ({
             createdAt={board._creationTime}
             orgId={board.orgId}
             isFavorite={board.isFavorite}
+            boardType={board.type}
           />
         ))}
       </div>
