@@ -1,8 +1,7 @@
-import {
-  defineSchema,
-  defineTable,
-} from "convex/server";
+import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+
+//TODO create TAsks table
 
 export default defineSchema({
   boards: defineTable({
@@ -23,14 +22,8 @@ export default defineSchema({
     orgId: v.string(),
   })
     .index("by_board", ["boardId"])
-    .index("by_user_org", [
-      "userId",
-      "orgId",
-    ])
-    .index("by_user_board", [
-      "userId",
-      "boardId",
-    ])
+    .index("by_user_org", ["userId", "orgId"])
+    .index("by_user_board", ["userId", "boardId"])
     .index("by_user_board_org", [
       "userId",
       "boardId",

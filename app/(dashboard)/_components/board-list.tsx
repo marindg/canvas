@@ -63,7 +63,7 @@ export const BoardList = ({
           ? "Favorite boards"
           : "Team boards"}
       </h2>
-      <div className="grid grid-cols-1 sm-grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-colds-12 gap-5 mt-8 pb-10">
+      <div className="grid grid-cols-1 sm-grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 2xl:grid-colds-12 gap-5 mt-8 pb-10">
         <NewBoardButton orgId={orgId} />
 
         {data?.map((board) => (
