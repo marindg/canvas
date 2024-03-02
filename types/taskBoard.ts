@@ -11,24 +11,23 @@ export interface TaskBoard {
   updatedAt: Date;
 }
 
-export interface List {
+export type CardWithList = Card & { list: List };
+export type ListWithCards = List & { cards: Card[] };
+
+export type List = {
   title: string;
   order: number;
-  taskBoardId: string;
-  taskBoard: TaskBoard;
-  cards: Card[];
-  createdAt: Date;
-  updatedAt: Date;
-}
+  boardId: string;
+  _creationTime: number;
+  _id: string;
+};
 
 export interface Card {
   title: string;
   order: number;
   description?: string;
   listId: string;
-  list: List;
-  createdAt: Date;
-  updatedAt: Date;
+  _createdAt: Date;
 }
 
 enum ACTION {

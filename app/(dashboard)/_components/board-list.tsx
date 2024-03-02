@@ -21,8 +21,6 @@ export const BoardList = ({
   orgId,
   query,
 }: BoardListProps) => {
-  console.log("query :", query);
-
   const data = useQuery(api.boards.get, {
     orgId,
     ...query,

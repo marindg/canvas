@@ -55,7 +55,6 @@ export const EmptyBoards = ({
         router.push(`/task/${id}`);
       })
       .catch((e) => {
-        console.log(e);
         toast.error("Failed to create task board");
       });
   };

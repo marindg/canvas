@@ -223,7 +223,6 @@ export const Canvas = ({ boardId }: CanvasProps) => {
         )
       );
       const liveLayerIds = storage.get("layerIds");
-      console.log(liveLayerIds);
 
       liveLayerIds.push(id);
 
