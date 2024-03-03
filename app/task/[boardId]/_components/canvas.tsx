@@ -2,13 +2,18 @@
 
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { pointerEventToCanvasPoint } from "@/lib/utils";
 import {
   useCanRedo,
   useCanUndo,
   useHistory,
+  useMutation,
 } from "@/liveblocks.config";
+import { Camera } from "@/types/canvas";
 import { List } from "@/types/taskBoard";
 import { useQuery } from "convex/react";
+import { useState } from "react";
+import { CursorsPresence } from "./cursors-presence";
 import { Info } from "./info";
 import { ListContainer } from "./list-container";
 import { Participants } from "./participants";
@@ -23,6 +28,11 @@ export const Canvas = ({ boardId }: CanvasProps) => {
   const canUndo = useCanUndo();
   const canRedo = useCanRedo();
 
+  const [camera, setCamera] = useState<Camera>({
+    x: 0,
+    y: 0,
+  });
+
   const data: List[] | undefined | null = useQuery(
     api.tasks.getTaskBoardList,
     {
@@ -32,6 +42,26 @@ export const Canvas = ({ boardId }: CanvasProps) => {
 
   console.log(data);
   // if (!data) return <InfoSkeleton />;
+
+  const onPointerMove = useMutation(
+    ({ setMyPresence }, e: React.PointerEvent) => {
+      e.preventDefault();
+
+      const current = pointerEventToCanvasPoint(e, camera);
+
+      setMyPresence({
+        cursor: current,
+      });
+    },
+    [camera]
+  );
+
+  const onPointerLeave = useMutation(
+    ({ setMyPresence }) => {
+      setMyPresence({ cursor: null });
+    },
+    []
+  );
 
   return (
     <main className="h-full w-full relative bg-neutral-100 touch-none">
@@ -43,13 +73,26 @@ export const Canvas = ({ boardId }: CanvasProps) => {
         undo={history.undo}
         redo={history.redo}
       />
-      <div className="w-full h-full pt-24 pl-32">
-        <ListContainer
-          boardId={boardId}
-          data={data}
-          numberOfLists={data ? data.length : 0}
-        />
-      </div>
+      <svg
+        className="h-[100vh] w-[100vw] relative z-1000"
+        onPointerMove={onPointerMove}
+        onPointerLeave={onPointerLeave}
+      >
+        <g
+          style={{
+            transform: `translate(${camera.x}px, ${camera.y}px)`,
+          }}
+        >
+          <CursorsPresence />
+          <foreignObject className="w-full h-full pt-24 pl-32">
+            <ListContainer
+              boardId={boardId}
+              data={data}
+              numberOfLists={data ? data.length : 0}
+            />
+          </foreignObject>
+        </g>
+      </svg>
     </main>
   );
 };
