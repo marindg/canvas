@@ -40,9 +40,6 @@ export const Canvas = ({ boardId }: CanvasProps) => {
     }
   );
 
-  console.log(data);
-  // if (!data) return <InfoSkeleton />;
-
   const onPointerMove = useMutation(
     ({ setMyPresence }, e: React.PointerEvent) => {
       e.preventDefault();
@@ -74,7 +71,7 @@ export const Canvas = ({ boardId }: CanvasProps) => {
         redo={history.redo}
       />
       <svg
-        className="h-[100vh] w-[100vw] relative z-1000"
+        className="h-[100vh] w-[100vw]"
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
       >
@@ -83,7 +80,6 @@ export const Canvas = ({ boardId }: CanvasProps) => {
             transform: `translate(${camera.x}px, ${camera.y}px)`,
           }}
         >
-          <CursorsPresence />
           <foreignObject className="w-full h-full pt-24 pl-32">
             <ListContainer
               boardId={boardId}
@@ -91,6 +87,7 @@ export const Canvas = ({ boardId }: CanvasProps) => {
               numberOfLists={data ? data.length : 0}
             />
           </foreignObject>
+          <CursorsPresence />
         </g>
       </svg>
     </main>

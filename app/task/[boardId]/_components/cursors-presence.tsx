@@ -36,8 +36,6 @@ const Drafts = () => {
   return (
     <>
       {others.map(([key, other]) => {
-        console.log({ key, other });
-
         if (other.pencilDraft) {
           return (
             <Path

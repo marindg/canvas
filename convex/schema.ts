@@ -46,9 +46,11 @@ export default defineSchema({
     title: v.string(),
     order: v.number(),
     boardId: v.id("boards"),
+    authorId: v.string(),
   })
     .index("by_board", ["boardId"])
-    .index("by_order", ["order"]),
+    .index("by_order", ["order"])
+    .index("by_author", ["authorId"]),
   taskBoardCardLog: defineTable({
     taskBoardCardId: v.id("taskBoardCard"),
     authorId: v.string(),

@@ -1,12 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { api } from "@/convex/_generated/api";
+import { useApiMutation } from "@/hooks/use-api-mutation";
 import { Plus, X } from "lucide-react";
 import { ElementRef, useRef, useState } from "react";
-import {
-  useEventListener,
-  useOnClickOutside,
-} from "usehooks-ts";
+import { toast } from "sonner";
+import { useEventListener } from "usehooks-ts";
 import { FormInput } from "./form-input";
 import { FormSubmit } from "./form-submit";
 import { ListWrapper } from "./list-wrapper";
@@ -22,6 +22,10 @@ export const ListForm = ({
 }: ListFormProps) => {
   const formRef = useRef<ElementRef<"form">>(null);
   const inputRef = useRef<ElementRef<"input">>(null);
+
+  const { mutate, pending } = useApiMutation(
+    api.tasks.createList
+  );
   const [isEditing, setIsEditing] = useState(false);
 
   const enableEditing = () => {
@@ -42,11 +46,24 @@ export const ListForm = ({
   };
 
   useEventListener("keydown", onKeyDown);
-  useOnClickOutside(formRef, disableEditing);
 
-  const onSubmit = (formData: FormData) => {
+  const onSubmit = async (formData: FormData) => {
     const title = formData.get("title") as string;
-    // const lb = useMutation()
+
+    if (title) {
+      await mutate({
+        boardId,
+        title,
+        numberOfLists,
+      })
+        .then((id) => {
+          toast.success("List created");
+        })
+        .catch(() => {
+          toast.error("Failed to create list");
+        });
+      disableEditing();
+    }
   };
 
   if (isEditing) {

@@ -195,3 +195,22 @@ export function getSvgPathFromStroke(stroke: number[][]) {
   d.push("Z");
   return d.join(" ");
 }
+
+export function convertToNumber(
+  value: FormDataEntryValue | null
+): number | null {
+  if (value === null) {
+    return 0;
+  } else if (typeof value === "string") {
+    const parsed = parseInt(value, 10);
+    if (!isNaN(parsed)) {
+      return parsed;
+    } else {
+      throw new Error("failed to parse string to number");
+    }
+  } else {
+    throw new Error(
+      "failed to parse FormDataEntryValue to number"
+    );
+  }
+}
