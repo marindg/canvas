@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { List } from "../types/taskBoard";
+import { ListWithCards } from "../types/taskBoard";
 import { mutation, query } from "./_generated/server";
 
 export const getTaskBoardList = query({
@@ -7,13 +7,32 @@ export const getTaskBoardList = query({
   handler: async (
     ctx,
     args
-  ): Promise<List[] | undefined> => {
-    const taskBoardList = ctx.db
+  ): Promise<ListWithCards[] | undefined> => {
+    const lists = ctx.db
       .query("taskBoardList")
       .filter((q) => q.eq(q.field("boardId"), args.id))
       .order("asc")
       .collect();
-    return taskBoardList;
+
+    const ListWithCards = await Promise.all(
+      (
+        await lists
+      ).map(async (list) => {
+        const cards = await ctx.db
+          .query("taskBoardCard")
+          .withIndex("by_list", (q) => {
+            return q.eq("listId", list._id);
+          })
+          .order("asc")
+          .collect();
+
+        return { ...list, cards };
+      })
+    );
+
+    console.log({ ListWithCards });
+
+    return ListWithCards;
   },
 });
 
@@ -52,7 +71,6 @@ export const copyList = mutation({
     }
 
     const existingList = await ctx.db.get(args.listId);
-    console.log({ existingList });
 
     if (!existingList) {
       throw new Error("List not found");
@@ -126,5 +144,46 @@ export const removeList = mutation({
     } else {
       throw new Error("List not found");
     }
+  },
+});
+
+export const createCard = mutation({
+  args: {
+    boardId: v.id("boards"),
+    listId: v.id("taskBoardList"),
+    title: v.string(),
+  },
+
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+    console.log({ args });
+
+    const existingList = await ctx.db.get(args.listId);
+
+    if (!existingList) {
+      throw new Error("List not found");
+    }
+
+    const lastCard = await ctx.db
+      .query("taskBoardCard")
+      .withIndex("by_list", (q) => {
+        return q.eq("listId", args.listId);
+      })
+      .order("desc")
+      .first();
+
+    const newOrder = lastCard ? lastCard.order + 1 : 1;
+
+    const newCard = await ctx.db.insert("taskBoardCard", {
+      title: args.title,
+      listId: args.listId,
+      order: newOrder,
+      authorId: identity.subject,
+    });
+
+    return newCard;
   },
 });

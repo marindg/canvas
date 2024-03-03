@@ -10,7 +10,7 @@ import {
   useMutation,
 } from "@/liveblocks.config";
 import { Camera } from "@/types/canvas";
-import { List } from "@/types/taskBoard";
+import { ListWithCards } from "@/types/taskBoard";
 import { useQuery } from "convex/react";
 import { useState } from "react";
 import { CursorsPresence } from "./cursors-presence";
@@ -33,7 +33,7 @@ export const Canvas = ({ boardId }: CanvasProps) => {
     y: 0,
   });
 
-  const data: List[] | undefined | null = useQuery(
+  const data: ListWithCards[] | undefined | null = useQuery(
     api.tasks.getTaskBoardList,
     {
       id: boardId as Id<"boards">,

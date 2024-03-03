@@ -17,9 +17,13 @@ import { ListOptions } from "./list-options";
 
 interface ListHeaderProps {
   data: List;
+  onAddCard: () => void;
 }
 
-export const ListHeader = ({ data }: ListHeaderProps) => {
+export const ListHeader = ({
+  data,
+  onAddCard,
+}: ListHeaderProps) => {
   const [title, setTitle] = useState<string>(data.title);
   const [order, setOrder] = useState<number>(data.order);
   const [isEditing, setIsEditing] =
@@ -137,7 +141,7 @@ export const ListHeader = ({ data }: ListHeaderProps) => {
           {title}
         </div>
       )}
-      <ListOptions data={data} onAddCard={() => {}} />
+      <ListOptions data={data} onAddCard={onAddCard} />
     </div>
   );
 };

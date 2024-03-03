@@ -1,10 +1,10 @@
-import { List } from "@/types/taskBoard";
+import { ListWithCards } from "@/types/taskBoard";
 import { useEffect, useState } from "react";
 import { ListForm } from "./list-form";
 import { ListItem } from "./list-item";
 
 interface ListContainerProps {
-  data: List[] | null | undefined;
+  data: ListWithCards[] | null | undefined;
   boardId: string;
   numberOfLists: number;
 }
@@ -15,7 +15,7 @@ export const ListContainer = ({
   numberOfLists,
 }: ListContainerProps) => {
   const [orderedData, setOrderedData] = useState<
-    List[] | null | undefined
+    ListWithCards[] | null | undefined
   >(data);
 
   useEffect(() => {
@@ -25,11 +25,11 @@ export const ListContainer = ({
   return (
     <ol className="flex gap-x-3 h-full">
       {orderedData?.map((list, index) => (
-        // TODO, ADD CARDS inside LIST
         <ListItem
           key={list._id}
           index={index}
           data={list}
+          boardId={boardId}
         />
       ))}
       <ListForm

@@ -28,7 +28,9 @@ export interface Card {
   order: number;
   description?: string;
   listId: string;
-  _createdAt: Date;
+  authorId: string;
+  _creationTime: number;
+  _id: string;
 }
 
 enum ACTION {
