@@ -67,3 +67,23 @@ export const updateList = mutation({
     return updatedList;
   },
 });
+
+export const removeList = mutation({
+  args: {
+    listId: v.id("taskBoardList"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const existingList = await ctx.db.get(args.listId);
+
+    if (existingList) {
+      await ctx.db.delete(existingList._id);
+    } else {
+      throw new Error("List not found");
+    }
+  },
+});

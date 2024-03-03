@@ -25,7 +25,7 @@ export const FormSubmit = ({
   children,
   disabled,
   className,
-  variant = "primary",
+  variant,
 }: FormSubmitProps) => {
   const { pending } = useFormStatus();
 
@@ -33,12 +33,9 @@ export const FormSubmit = ({
     <Button
       disabled={pending || disabled}
       type="submit"
-      variant="default"
+      variant={variant}
       size="sm"
-      className={cn(
-        "hover:bg-blue-500/50 transition",
-        className
-      )}
+      className={cn(className)}
     >
       {children}
     </Button>

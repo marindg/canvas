@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner";
 import { useEventListener } from "usehooks-ts";
 import { FormInput } from "./form-input";
+import { ListOptions } from "./list-options";
 
 interface ListHeaderProps {
   data: List;
@@ -26,6 +27,10 @@ export const ListHeader = ({ data }: ListHeaderProps) => {
 
   const formRef = useRef<ElementRef<"form">>(null);
   const inputRef = useRef<ElementRef<"input">>(null);
+
+  const handleRemoveList = useApiMutation(
+    api.tasks.removeList
+  );
 
   const { mutate, pending } = useApiMutation(
     api.tasks.updateList
@@ -64,7 +69,7 @@ export const ListHeader = ({ data }: ListHeaderProps) => {
       title: newTitle,
       order: newOrder,
     })
-      .then((id) => {
+      .then(() => {
         toast.success("List updated");
         setTitle(newTitle);
         disableEditing();
@@ -132,6 +137,7 @@ export const ListHeader = ({ data }: ListHeaderProps) => {
           {title}
         </div>
       )}
+      <ListOptions data={data} onAddCard={() => {}} />
     </div>
   );
 };

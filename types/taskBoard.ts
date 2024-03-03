@@ -18,6 +18,7 @@ export type List = {
   title: string;
   order: number;
   boardId: string;
+  authorId: string;
   _creationTime: number;
   _id: string;
 };
