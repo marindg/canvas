@@ -14,9 +14,13 @@ export const getTaskBoardList = query({
       .order("asc")
       .collect();
 
+    const listOrdered = (await lists).sort(
+      (a, b) => a.order - b.order
+    );
+
     const ListWithCards = await Promise.all(
       (
-        await lists
+        await listOrdered
       ).map(async (list) => {
         const cards = await ctx.db
           .query("taskBoardCard")
@@ -29,8 +33,6 @@ export const getTaskBoardList = query({
         return { ...list, cards };
       })
     );
-
-    console.log({ ListWithCards });
 
     return ListWithCards;
   },
@@ -159,7 +161,6 @@ export const createCard = mutation({
     if (!identity) {
       throw new Error("Unauthorized");
     }
-    console.log({ args });
 
     const existingList = await ctx.db.get(args.listId);
 
@@ -185,5 +186,55 @@ export const createCard = mutation({
     });
 
     return newCard;
+  },
+});
+
+export const updateListOrder = mutation({
+  args: {
+    items: v.array(
+      v.object({
+        _id: v.id("taskBoardList"),
+        title: v.string(),
+        boardId: v.id("boards"),
+        authorId: v.string(),
+        _creationTime: v.number(),
+        cards: v.array(
+          v.object({
+            title: v.string(),
+            order: v.number(),
+            description: v.optional(v.string()),
+            listId: v.id("taskBoardList"),
+            authorId: v.string(),
+            _creationTime: v.number(),
+            _id: v.id("taskBoardCard"),
+          })
+        ),
+        order: v.number(),
+      })
+    ),
+    boardId: v.id("boards"),
+  },
+
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const updates = args.items.map((item) =>
+      ctx.db.patch(item._id, {
+        order: item.order,
+      })
+    );
+
+    try {
+      await Promise.all(updates);
+    } catch (error: any) {
+      throw new Error(
+        "Failed to reorder: " + error.message
+      );
+    }
+
+    return { success: true };
   },
 });
