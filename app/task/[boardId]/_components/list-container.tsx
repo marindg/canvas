@@ -25,9 +25,15 @@ export const ListContainer = ({
     ListWithCards[] | null | undefined
   >(data);
 
-  const { mutate, pending } = useApiMutation(
-    api.tasks.updateListOrder
-  );
+  const {
+    mutate: mutateListOrder,
+    pending: pendingListOrder,
+  } = useApiMutation(api.tasks.updateListOrder);
+
+  const {
+    mutate: mutateCardOrder,
+    pending: pendingCardOrder,
+  } = useApiMutation(api.tasks.updateCardOrder);
 
   useEffect(() => {
     setOrderedData(data);
@@ -67,9 +73,7 @@ export const ListContainer = ({
 
       setOrderedData(items);
 
-      console.log(items);
-
-      await mutate({
+      await mutateListOrder({
         items,
         boardId,
       })
@@ -77,7 +81,6 @@ export const ListContainer = ({
           toast.success("List order updated");
         })
         .catch((e) => {
-          console.log(e);
           toast.error("Failed to update order list");
         });
     }
@@ -90,6 +93,7 @@ export const ListContainer = ({
       const sourceList = newOrderedData.find(
         (list) => list._id === source.droppableId
       );
+
       const destList = newOrderedData.find(
         (list) => list._id === destination.droppableId
       );
@@ -122,7 +126,18 @@ export const ListContainer = ({
         sourceList.cards = reorderedCards;
 
         setOrderedData(newOrderedData);
-        // trigger server action
+
+        await mutateCardOrder({
+          cards: reorderedCards,
+          listId: sourceList._id,
+        })
+          .then(() => {
+            toast.success("Card order updated");
+          })
+          .catch((e) => {
+            console.log(e);
+            toast.error("Failed to update order card");
+          });
       } else {
         const [movedCard] = sourceList.cards.splice(
           source.index,

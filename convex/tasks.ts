@@ -30,7 +30,11 @@ export const getTaskBoardList = query({
           .order("asc")
           .collect();
 
-        return { ...list, cards };
+        const cardsOrdered = cards.sort(
+          (a, b) => a.order - b.order
+        );
+
+        return { ...list, cards: cardsOrdered };
       })
     );
 
@@ -232,6 +236,46 @@ export const updateListOrder = mutation({
     } catch (error: any) {
       throw new Error(
         "Failed to reorder: " + error.message
+      );
+    }
+
+    return { success: true };
+  },
+});
+
+export const updateCardOrder = mutation({
+  args: {
+    items: v.array(
+      v.object({
+        title: v.string(),
+        order: v.number(),
+        description: v.optional(v.string()),
+        listId: v.id("taskBoardList"),
+        authorId: v.string(),
+        _creationTime: v.number(),
+        _id: v.id("taskBoardCard"),
+      })
+    ),
+    listId: v.id("taskBoardList"),
+  },
+
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const cardUpdates = args.cards.map((card) =>
+      ctx.db.patch(card._id, {
+        order: card.order,
+      })
+    );
+
+    try {
+      await Promise.all(cardUpdates);
+    } catch (error: any) {
+      throw new Error(
+        "Failed to reorder cards: " + error.message
       );
     }
 
