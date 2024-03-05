@@ -245,7 +245,7 @@ export const updateListOrder = mutation({
 
 export const updateCardOrder = mutation({
   args: {
-    items: v.array(
+    cards: v.array(
       v.object({
         title: v.string(),
         order: v.number(),
@@ -268,6 +268,7 @@ export const updateCardOrder = mutation({
     const cardUpdates = args.cards.map((card) =>
       ctx.db.patch(card._id, {
         order: card.order,
+        listId: args.listId,
       })
     );
 

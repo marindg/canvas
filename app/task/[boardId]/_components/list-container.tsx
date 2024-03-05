@@ -126,7 +126,6 @@ export const ListContainer = ({
         sourceList.cards = reorderedCards;
 
         setOrderedData(newOrderedData);
-
         await mutateCardOrder({
           cards: reorderedCards,
           listId: sourceList._id,
@@ -135,7 +134,6 @@ export const ListContainer = ({
             toast.success("Card order updated");
           })
           .catch((e) => {
-            console.log(e);
             toast.error("Failed to update order card");
           });
       } else {
@@ -163,7 +161,18 @@ export const ListContainer = ({
             card.order = index;
           }
         );
+
         setOrderedData(newOrderedData);
+        await mutateCardOrder({
+          cards: destList.cards,
+          listId: destList._id,
+        })
+          .then(() => {
+            toast.success("Card list updated");
+          })
+          .catch((e) => {
+            toast.error("Failed to update card list");
+          });
       }
     }
   };
